@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Interaction (GET, POST, PUT, DELETE)</title>
+  </head>
+  <body>
+    <h1>API Interaction with GET, POST, PUT, DELETE</h1>
+
+    <!-- GET Request -->
+    <h2>GET Users</h2>
+    <button onclick="getUsers()">Fetch Users</button>
+    <pre id="getResponse"></pre>
+
+    <!-- POST Request -->
+    <h2>POST User</h2>
+    <button onclick="addUser()">Add User</button>
+    <pre id="postResponse"></pre>
+
+    <!-- PUT Request -->
+    <h2>PUT User (ID: 1)</h2>
+    <button onclick="updateUser()">Update User</button>
+    <pre id="putResponse"></pre>
+
+    <!-- DELETE Request -->
+    <h2>DELETE User (ID: 1)</h2>
+    <button onclick="deleteUser()">Delete User</button>
+    <pre id="deleteResponse"></pre>
+
+    <script>
+      const apiUrl = "http://localhost:3000/api/users";
+
+      // GET Request
+      function getUsers() {
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("getResponse").textContent = JSON.stringify(
+              data,
+              null,
+              2
+            );
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // POST Request
+      function addUser() {
+        const newUser = {
+          name: "Jane Doe",
+          email: "jane@example.com",
+        };
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("postResponse").textContent =
+              JSON.stringify(data, null, 2);
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // PUT Request (Update User with ID 1)
+      function updateUser() {
+        const updatedUser = {
+          name: "John Smith",
+          email: "johnsmith@example.com",
+        };
+
+        fetch(`${apiUrl}/1`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUser),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("putResponse").textContent = JSON.stringify(
+              data,
+              null,
+              2
+            );
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // DELETE Request (Delete User with ID 1)
+      function deleteUser() {
+        fetch(`${apiUrl}/1`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("deleteResponse").textContent =
+              JSON.stringify(data, null, 2);
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
