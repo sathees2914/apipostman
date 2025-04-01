@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>API Test with Node.js</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      h1 {
+        color: #333;
+      }
+      pre {
+        background: #fff;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API Test with Node.js</h1>
+
+    <button onclick="getData()">Get Data (GET)</button>
+    <button onclick="postData()">Add Data (POST)</button>
+    <button onclick="putData()">Update Data (PUT)</button>
+    <button onclick="deleteData()">Delete Data (DELETE)</button>
+
+    <h2>Response:</h2>
+    <pre id="response">No data yet...</pre>
+
+    <script>
+      const apiUrl = "http://localhost:3000/api/data";
+      const auth = "Basic " + btoa("admin:password"); // Basic Auth
+
+      // GET Request
+      function getData() {
+        fetch(apiUrl, {
+          method: "GET",
+          headers: { Authorization: auth },
+        })
+          .then((res) => res.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
+
+      // POST Request
+      function postData() {
+        const postData = { name: "John Doe", age: 30 };
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            Authorization: auth,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        })
+          .then((res) => res.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
+
+      // PUT Request (Update first item with ID 0)
+      function putData() {
+        const putData = { name: "Jane Doe", age: 28 };
+
+        fetch(`${apiUrl}/0`, {
+          method: "PUT",
+          headers: {
+            Authorization: auth,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(putData),
+        })
+          .then((res) => res.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
+
+      // DELETE Request (Delete first item with ID 0)
+      function deleteData() {
+        fetch(`${apiUrl}/0`, {
+          method: "DELETE",
+          headers: { Authorization: auth },
+        })
+          .then((res) => res.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
+
+      // Display API Response
+      function displayResponse(data) {
+        document.getElementById("response").textContent = JSON.stringify(
+          data,
+          null,
+          2
+        );
+      }
+    </script>
+  </body>
+</html>
